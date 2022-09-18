@@ -1,10 +1,12 @@
 package com.api.sat.service;
 
+import com.api.sat.model.UserDetails;
 import com.api.sat.repository.DatabaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.util.List;
 
 @Service
 public class ManagerService {
@@ -12,9 +14,9 @@ public class ManagerService {
     @Autowired
     DatabaseRepository db;
 
-    public void getData(){
+    public List<UserDetails> getManagerDetails(int id){
         try {
-            db.getData();
+            return db.getManagerDetails(id);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

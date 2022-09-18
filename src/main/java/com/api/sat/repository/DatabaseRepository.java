@@ -1,5 +1,6 @@
 package com.api.sat.repository;
 
+import com.api.sat.model.UserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -28,22 +29,30 @@ public class DatabaseRepository {
         return conn;
     }
 
-    public void getData() throws SQLException {
-        String result = "";
+    public List<UserDetails> getManagerDetails(int id) throws SQLException {
+        List<UserDetails> result = new ArrayList<>();
         try {
          Connection conn = getConnection();
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("select * from TEST");
+            String sql = "select * from userdetails where managerid = " + id;
+            ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()){
-                System.out.print(rs.getString(1));
-                System.out.print(rs.getString(2));
-                System.out.println("");
+                UserDetails userDetails = new UserDetails();
+                userDetails.setId(rs.getString(1));
+                userDetails.setfName(rs.getString(2));
+                userDetails.setlName(rs.getString(3));
+                userDetails.setDivision(rs.getString(4));
+                userDetails.setManagerId(rs.getString(5));
+                userDetails.setSubordinateCount(rs.getString(6));
+                userDetails.setLevel(rs.getString(7));
+                result.add(userDetails);
             }
             stmt.close();
             conn.close();
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
+        return result;
     }
 
     public void saveSeatsData(){
