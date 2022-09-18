@@ -18,6 +18,10 @@ public class ManagerController {
         return "Hello From Manager Controller.";
     }
 
-
+    @GetMapping("/save")
+    public String save(){
+        managerService.saveData();
+        return "Saved data";
+    }
 
 }

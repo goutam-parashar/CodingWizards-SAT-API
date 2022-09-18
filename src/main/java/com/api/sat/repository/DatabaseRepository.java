@@ -1,25 +1,27 @@
 package com.api.sat.repository;
 
-import com.api.sat.model.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+
 
 @Repository
 public class DatabaseRepository {
-    static final String JDBC_DRIVER = "org.h2.Driver";
-    static final String DB_URL = "jdbc:h2:~/test";
-    static final String USER = "sa";
-    static final String PASS = "";
+
+    @Autowired
+    DataSource ds;
 
     public Connection getConnection() {
         Connection conn = null;
         try {
-            Class.forName(JDBC_DRIVER);
             System.out.println("Connecting to database...");
-            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            conn = ds.getConnection();
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -33,8 +35,9 @@ public class DatabaseRepository {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("select * from TEST");
             while (rs.next()){
-                System.out.println(rs.getString(1));
-                System.out.println(rs.getString(2));
+                System.out.print(rs.getString(1));
+                System.out.print(rs.getString(2));
+                System.out.println("");
             }
             stmt.close();
             conn.close();
@@ -43,7 +46,33 @@ public class DatabaseRepository {
         }
     }
 
-    public Location getBookingDetails(){
+    public void saveSeatsData(){
+        try {
+            Connection con = getConnection();
+            if (con != null) {
+                Statement statement = con.createStatement();
+                List<String> f = new ArrayList<>(Arrays.asList("F1", "F2", "F3", "F4"));
+                List<String> w = new ArrayList<>(Arrays.asList("WA", "WB", "WC", "WD"));
+                for (String floor : f) {
+                    for (String wing : w) {
+                        int seats = 0;
+                        seats = (Objects.equals(floor, "F1") || Objects.equals(floor, "F2")) ? 160 : 165;
+                        for (int i = 0; i < seats; i++) {
+                            String name = "" + floor + wing + "S" + i;
+                            String sql = "INSERT INTO SEAT VALUES ('S" + i + "','" + name + "', '" + wing + "', '" + floor + "', 'L2');";
+                            statement.addBatch(sql);
+                        }
+                    }
+                }
+                System.out.println(statement.executeBatch());
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+   /* public Location getBookingDetails(){
 
         Seat seat1 = new Seat();
         seat1.setNumber(1);
@@ -84,6 +113,6 @@ public class DatabaseRepository {
         location.setOffice("EON2");
         location.setFloors(floors);
         return location;
-    }
+    }*/
 
 }
