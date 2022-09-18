@@ -10,18 +10,18 @@ import java.sql.SQLException;
 public class ManagerService {
 
     @Autowired
-    DatabaseRepository repo;
+    DatabaseRepository db;
 
     public void getData(){
         try {
-            repo.getData();
+            db.getData();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     public void saveData(){
-        repo.saveSeatsData();
+        db.saveSeatsData();
     }
 
     /*public void getData(){
