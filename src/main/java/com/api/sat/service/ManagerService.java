@@ -22,9 +22,9 @@ public class ManagerService {
         }
     }
 
-    public void saveData(){
+  /*  public void saveData(){
         db.saveSeatsData();
-    }
+    }*/
 
     /*public void getData(){
         try {

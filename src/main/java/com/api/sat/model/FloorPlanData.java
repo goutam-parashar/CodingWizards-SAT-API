@@ -9,6 +9,8 @@ public class FloorPlanData {
         data = list;
     }
 
+    public FloorPlanData(){}
+
     public List<FloorPlan> getData() {
         return data;
     }

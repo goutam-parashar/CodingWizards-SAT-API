@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +22,7 @@ public class ManagerController {
     ManagerService managerService;
 
     @GetMapping(value = "/manager")
+    @CrossOrigin(origins = "*")
     public ResponseEntity<List<UserDetails>> managerDetails(@RequestParam String id){
         List<UserDetails> details = managerService.getManagerDetails(Integer.parseInt(id));
         HttpHeaders headers = new HttpHeaders();

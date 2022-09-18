@@ -1,5 +1,6 @@
 package com.api.sat.service;
 
+import com.api.sat.model.AllocationData;
 import com.api.sat.model.FloorPlan;
 import com.api.sat.model.FloorPlanData;
 import com.api.sat.repository.DatabaseRepository;
@@ -49,5 +50,26 @@ public class AdminService {
             }
         }
         return new FloorPlanData(list);
+    }
+
+    public void allocateSeats(AllocationData allocationData) {
+//        {"floorId": "F1", "floorName":"Floor1","wingId":"W1","wingName":"Wing 1","seatStartNo": 1,"seatEndNo":40}
+        String sql = "update seat set division = 'A' where seat_num = 1";
+        String division = allocationData.getDivision();
+        List<FloorPlan> data = allocationData.getData().getData();
+        List<String> queries = new ArrayList<>();
+        StringBuilder sb =  new StringBuilder();
+        for (FloorPlan d : data) {
+            int start = Integer.parseInt(d.getSeatStartNo());
+            int end = Integer.parseInt(d.getSeatEndNo());
+            while (start<= end) {
+                sb.append("UPDATE SEAT SET DIVISION = ").append(division)
+                        .append(" WHERE SEAT_NUM = ").append(start).append(";");
+                queries.add(sb.toString());
+                sb.delete(0, sb.length());
+                start++;
+            }
+        }
+        db.executeUpdateQueries(queries);
     }
 }

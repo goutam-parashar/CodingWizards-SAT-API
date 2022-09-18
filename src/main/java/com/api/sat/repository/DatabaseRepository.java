@@ -51,7 +51,7 @@ public class DatabaseRepository {
         }
         return result;
     }
-
+/*
     public void saveSeatsData(){
         try {
             Connection con = getConnection();
@@ -70,12 +70,15 @@ public class DatabaseRepository {
                         }
                     }
                 }
-                System.out.println(statement.executeBatch());
+                System.out.println(Arrays.toString(statement.executeBatch()));
+                statement.close();
             }
+            assert con != null;
+            con.close();
         } catch (Exception e){
             e.printStackTrace();
         }
-    }
+    }*/
 
     public void getFloorPlan(Map<String, Map<String, List<String>>> seats, Map<String, String> floorNames, Map<String, String> wingNames) {
         String sql = "select floor_code, floor_name,  wing_code, wing_code, seat_num from seat group by floor_code, wing_code, seat_num order by floor_code, wing_code asc;";
@@ -94,6 +97,23 @@ public class DatabaseRepository {
                 }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void executeUpdateQueries(List<String> queries) {
+        Connection connection = getConnection();
+        String sql = "update seat set division = 'A' where seat_num = 1";
+        if (connection != null){
+            try {
+                Statement statement = connection.createStatement();
+                for (String query : queries) {
+                    statement.addBatch(query);
+                }
+                int[] ints = statement.executeBatch();
+                connection.close();
+            } catch (Exception e){
+                e.printStackTrace();
             }
         }
     }
