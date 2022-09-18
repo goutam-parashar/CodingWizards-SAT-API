@@ -5,8 +5,10 @@ import com.api.sat.repository.DatabaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
+import java.text.ParseException;
+import java.util.Date;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,7 +29,7 @@ public class ManagerService {
         }
     }
 
-    public List<FloorDto>  getAvailableSeats(String id){
+    public List<FloorDto>  getAvailableSeats(String id, String dateSelected){
         /*List<String> ids = new ArrayList<>();
         try {
             List<UserDetails> subordinateDetails = db.getSubordinateDetails(id);
@@ -48,7 +50,7 @@ public class ManagerService {
 //        String sql = "select * from seat where "+userIdColName +" = " + myDetails.getId();
         String allDataSql= "select * from seat";
         List<SeatData> availableSeats = db.getAvailableSeats(allDataSql);
-        availableSeats.forEach(seatData -> setStatus(seatData,id, myLevel));
+        availableSeats.forEach(seatData -> setStatus(seatData,id, myLevel,dateSelected));
 
         List<FloorDto> floorList= new ArrayList<>();
         Map<String, List<SeatData>> sum = availableSeats.stream().collect(
@@ -72,7 +74,7 @@ public class ManagerService {
 
                     RowDto r1= new RowDto();
                     r1.setRowNo(""+i);
-                    r1.setSeatList(wingRec.getValue().subList(counter,counter+7));
+                    r1.setSeatList(wingRec.getValue().subList(counter,counter+8));
                     counter= counter+8;
                     rowList.add(r1);
                 }
@@ -86,11 +88,17 @@ public class ManagerService {
         return floorList;
     }
 
-    private static void setStatus(SeatData seatData, String id, String myLevel) {
+    private static void setStatus(SeatData seatData, String id, String myLevel, String dateSelected)  {
         Date n1StartDate = seatData.getN1StartDate();
         Date n1EndDate = seatData.getN1EndDate();
         String userId="";
-        java.util.Date date = new java.util.Date();
+//        java.util.Date date = new java.util.Date();
+        Date date=null;
+        try {
+             date = new SimpleDateFormat("yyyy-MM-dd").parse(dateSelected);
+        }catch(Exception ex){
+
+        }
 
         if(myLevel.equals("HIGH")){
             userId= seatData.getN1User();
@@ -101,16 +109,19 @@ public class ManagerService {
         }
         if (userId!=null && userId.equals(id) && n1StartDate.getTime() < date.getTime() && date.getTime() < n1EndDate.getTime()) {
             seatData.setN1Status("allocated");
+            seatData.setStatus("allocated");
         }
         Date n2StartDate = seatData.getN2StartDate();
         Date n2EndDate = seatData.getN2EndDate();
         if (userId!=null && userId.equals(id) && n2StartDate!= null && n2StartDate.getTime() < date.getTime() && date.getTime() < n2EndDate.getTime()) {
-            seatData.setN3Status("allocated");
+            seatData.setN2Status("allocated");
+            seatData.setStatus("allocated");
         }
         Date n3StartDate = seatData.getN3StartDate();
         Date n3EndDate = seatData.getN3EndDate();
         if (userId!=null && userId.equals(id) && n2StartDate!= null &&  n3StartDate.getTime() < date.getTime() && date.getTime() < n3EndDate.getTime()) {
             seatData.setN3Status("allocated");
+            seatData.setStatus("allocated");
         }
     }
 

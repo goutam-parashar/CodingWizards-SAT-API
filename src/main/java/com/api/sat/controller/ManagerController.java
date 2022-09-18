@@ -33,8 +33,8 @@ public class ManagerController {
 
     @GetMapping(value = "/myAvailableSeats")
     @CrossOrigin(origins = "*")
-    public ResponseEntity<List<FloorDto>> getAvailableSeats(@RequestParam String id){
-        List<FloorDto>  details = managerService.getAvailableSeats(id);
+    public ResponseEntity<List<FloorDto>> getAvailableSeats(@RequestParam String id, @RequestParam String dateSelected){
+        List<FloorDto>  details = managerService.getAvailableSeats(id,dateSelected);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(details);
