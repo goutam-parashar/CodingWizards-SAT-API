@@ -28,6 +28,36 @@ public class ManagerService {
             throw new RuntimeException(e);
         }
     }
+    public int getSubordinateCount(int id){
+        int count = 0;
+        List<UserDetails> totoal = new ArrayList<>();
+        List<UserDetails> subordinateDetails = getSubordinateDetails(id);
+        if (!subordinateDetails.isEmpty()){
+            String level = subordinateDetails.get(0).getLevel();
+            if (level.equals("MID")){
+                count = count+subordinateDetails.size();
+                List<UserDetails> totoalMid = new ArrayList<>();
+                subordinateDetails.forEach(s -> {
+                            totoalMid.addAll(getSubordinateDetails(Integer.parseInt(s.getId())));
+                        });
+                count=count+totoalMid.size();
+                for (UserDetails userDetails : totoalMid) {
+                    count=count+Integer.parseInt(userDetails.getSubordinateCount());
+                }
+            }
+            if (level.equals("LOW")){
+                for (UserDetails subordinateDetail : subordinateDetails) {
+                    count = count + Integer.parseInt(subordinateDetail.getSubordinateCount());
+                }
+            }
+        } else {
+            UserDetails myDetails = db.getMyDetails(String.valueOf(id));
+            if (myDetails!=null){
+                count=Integer.parseInt(myDetails.getSubordinateCount());
+            }
+        }
+        return count;
+    }
 
     public List<FloorDto>  getAvailableSeats(String id, String dateSelected){
         /*List<String> ids = new ArrayList<>();
@@ -123,6 +153,40 @@ public class ManagerService {
             seatData.setN3Status("allocated");
             seatData.setStatus("allocated");
         }
+    }
+
+    public void allocateSeats(AllocatedSeatDto data){
+        String subordinateId = data.getSubordinateId();
+        UserDetails myDetails = db.getMyDetails(subordinateId);
+        String myLevel = myDetails.getLevel();
+        String user = myLevel.equals("HIGH")?"N1":myLevel.equals("MID")?"N2":"N3";
+        String userId = user+"_USER_ID";
+        String startDate = user+"_START_DATE";
+        String endDate = user+"_END_DATE";
+        String nStatus = user+"_STATUS";
+        StringBuilder sb = new StringBuilder();
+        List<String> queries = new ArrayList<>();
+        data.getSeats().forEach(seatData -> {
+//            String floorCode = seatData.getFloorCode();
+//            String windCode = seatData.getWingCode();
+            String seatCode = seatData.getSeatCode();
+            //update seat set status = 'alloted' where seat_num = 1 and floor_code = 'L1' and wing_code = 'W1'
+            sb.append("update seat set ")
+                    .append(userId).append(" = '").append(subordinateId).append("',")
+                    .append(startDate).append(" = '").append(data.getStartDate()).append("', ")
+                    .append(endDate).append(" = '").append(data.getEndDate()).append("', ")
+                    .append(nStatus).append(" = '").append("allocated").append("', ")
+                    .append("status = 'allocated',  where ")
+                    .append("seat_code = '").append(seatCode).append("'");
+
+                   /* .append("floor_code = '").append(floorCode).append("' and ")
+                    .append("wing_code = '").append(windCode).append("' and ")
+                    .append("seat_num = '").append(seatNum).append("' and ")*/
+
+            queries.add(sb.toString());
+            sb.delete(0, sb.length());
+        });
+        db.executeUpdateQueries(queries);
     }
 
 

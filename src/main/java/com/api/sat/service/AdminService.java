@@ -53,8 +53,6 @@ public class AdminService {
     }
 
     public void allocateDivision(FloorPlanData fpd, String division) {
-//        {"floorId": "F1", "floorName":"Floor1","wingId":"W1","wingName":"Wing 1","seatStartNo": 1,"seatEndNo":40}
-        String sql = "update seat set division = 'A' where seat_num = 1";
         List<FloorPlan> data = fpd.getData();
         List<String> queries = new ArrayList<>();
         StringBuilder sb =  new StringBuilder();
@@ -63,7 +61,8 @@ public class AdminService {
             int end = Integer.parseInt(d.getSeatEndNo());
             while (start<= end) {
                 sb.append("UPDATE SEAT SET DIVISION = '").append(division)
-                        .append("' WHERE SEAT_NUM = ").append(start).append(";");
+                        .append("' WHERE SEAT_NUM = ").append(start)
+                        .append(" and FLOOR_CODE = '").append(d.getFloorId()).append("';");
                 queries.add(sb.toString());
                 sb.delete(0, sb.length());
                 start++;

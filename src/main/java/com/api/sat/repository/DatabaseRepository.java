@@ -187,7 +187,6 @@ public class DatabaseRepository {
         return null;
     }
 
-
    /* public Location getBookingDetails(){
 
         Seat seat1 = new Seat();
