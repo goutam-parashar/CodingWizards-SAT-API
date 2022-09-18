@@ -6,8 +6,8 @@ import java.util.List;
 public class AllocatedSeatDto {
     String floorId;
     String subordinateId;
-    Date startDate;
-    Date endDate;
+    String startDate;
+    String endDate;
     List<SeatData> seats;
 
     public String getFloorId() {
@@ -26,19 +26,19 @@ public class AllocatedSeatDto {
         this.subordinateId = subordinateId;
     }
 
-    public Date getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 

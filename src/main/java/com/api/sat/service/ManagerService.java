@@ -175,8 +175,8 @@ public class ManagerService {
                     .append(userId).append(" = '").append(subordinateId).append("',")
                     .append(startDate).append(" = '").append(data.getStartDate()).append("', ")
                     .append(endDate).append(" = '").append(data.getEndDate()).append("', ")
-                    .append(nStatus).append(" = '").append("allocated").append("', ")
-                    .append("status = 'allocated',  where ")
+                    .append(nStatus).append(" = '").append("allocated").append("'")
+                    .append(" where ")
                     .append("seat_code = '").append(seatCode).append("'");
 
                    /* .append("floor_code = '").append(floorCode).append("' and ")
