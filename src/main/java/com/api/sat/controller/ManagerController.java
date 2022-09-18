@@ -1,6 +1,6 @@
 package com.api.sat.controller;
 
-import com.api.sat.model.FloorPlan;
+import com.api.sat.model.SeatData;
 import com.api.sat.model.UserDetails;
 import com.api.sat.service.ManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +21,19 @@ public class ManagerController {
     @Autowired
     ManagerService managerService;
 
-    @GetMapping(value = "/manager")
+    @GetMapping(value = "/subordinates")
     @CrossOrigin(origins = "*")
-    public ResponseEntity<List<UserDetails>> managerDetails(@RequestParam String id){
-        List<UserDetails> details = managerService.getManagerDetails(Integer.parseInt(id));
+    public ResponseEntity<List<UserDetails>> getSubordinateDetails(@RequestParam String id){
+        List<UserDetails> details = managerService.getSubordinateDetails(Integer.parseInt(id));
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(details);
+    }
+
+    @GetMapping(value = "/myAvailableSeats")
+    @CrossOrigin(origins = "*")
+    public ResponseEntity<List<SeatData>> getAvailableSeats(@RequestParam String id){
+        List<SeatData> details = managerService.getAvailableSeats(Integer.parseInt(id));
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(details);

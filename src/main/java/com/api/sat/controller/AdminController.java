@@ -27,9 +27,17 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(details);
     }
 
-    @PostMapping(value = "allocate")
+    @PostMapping(value = "allocate/division")
     @CrossOrigin(origins = "*")
-    public void allocateSeats(@RequestBody() String allocationData, @RequestParam("division") String division){
+    public void allocateDivision(@RequestBody() String allocationData, @RequestParam("division") String division){
+        Gson gson= new Gson();
+        FloorPlanData data=gson.fromJson(allocationData,FloorPlanData.class);
+        adminService.allocateDivision(data, division);
+    }
+
+    @PostMapping(value = "allocate/seat")
+    @CrossOrigin(origins = "*")
+    public void allocateSeats(@RequestBody() String allocationData, @RequestParam("to") String division){
         Gson gson= new Gson();
         FloorPlanData data=gson.fromJson(allocationData,FloorPlanData.class);
         adminService.allocateSeats(data, division);

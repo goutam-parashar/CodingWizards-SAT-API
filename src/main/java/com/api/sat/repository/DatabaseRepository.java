@@ -1,5 +1,6 @@
 package com.api.sat.repository;
 
+import com.api.sat.model.SeatData;
 import com.api.sat.model.UserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -26,7 +27,7 @@ public class DatabaseRepository {
         return conn;
     }
 
-    public List<UserDetails> getManagerDetails(int id) throws SQLException {
+    public List<UserDetails> getSubordinateDetails(int id) throws SQLException {
         List<UserDetails> result = new ArrayList<>();
         try {
          Connection conn = getConnection();
@@ -116,6 +117,74 @@ public class DatabaseRepository {
                 e.printStackTrace();
             }
         }
+    }
+
+    public List<SeatData> getAvailableSeats(String sql) {
+        Connection connection = getConnection();
+        List<SeatData> list = new ArrayList<>();
+        if (connection != null){
+            try {
+                ResultSet rs = connection.createStatement().executeQuery(sql);
+                while (rs.next()) {
+                    SeatData seatData = new SeatData();
+                    seatData.setSeatCode(rs.getString(1));
+                    seatData.setFloorName(rs.getString(2));
+                    seatData.setFloorCode(rs.getString(3));
+                    seatData.setWingCode(rs.getString(4));
+                    seatData.setLocation(rs.getString(5));
+                    seatData.setSeatNum(rs.getString(6));
+                    seatData.setDivision(rs.getString(7));
+                    seatData.setAssignedTo(rs.getString(8));
+                    seatData.setStatus(rs.getString(9));
+                    seatData.setN1User(rs.getString(10));
+                    seatData.setN1StartDate(rs.getDate(11));
+                    seatData.setN1EndDate(rs.getDate(12));
+                    seatData.setN2User(rs.getString(13));
+                    seatData.setN2StartDate(rs.getDate(14));
+                    seatData.setN2EndDate(rs.getDate(15));
+                    seatData.setN3User(rs.getString(16));
+                    seatData.setN3StartDate(rs.getDate(17));
+                    seatData.setN3EndDate(rs.getDate(18));
+                    seatData.setN1Status(rs.getString(19));
+                    seatData.setN2Status(rs.getString(20));
+                    seatData.setN3Status(rs.getString(21));
+                    list.add(seatData);
+                }
+                connection.close();
+                return list;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+
+        }
+        return list;
+    }
+
+    public UserDetails getMyDetails(int id) {
+        Connection connection = getConnection();
+        String sql = "select * from userdetails where id = " + id;
+        if (connection != null){
+            try {
+                ResultSet rs = connection.createStatement().executeQuery(sql);
+                while (rs.next()){
+                    UserDetails userDetails = new UserDetails();
+                    userDetails.setId(rs.getString(1));
+                    userDetails.setfName(rs.getString(2));
+                    userDetails.setlName(rs.getString(3));
+                    userDetails.setDivision(rs.getString(4));
+                    userDetails.setManagerId(rs.getString(5));
+                    userDetails.setSubordinateCount(rs.getString(6));
+                    userDetails.setLevel(rs.getString(7));
+
+                    connection.close();
+                    return userDetails;
+                }
+
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return null;
     }
 
 
