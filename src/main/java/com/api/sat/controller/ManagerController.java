@@ -1,5 +1,6 @@
 package com.api.sat.controller;
 
+import com.api.sat.model.FloorDto;
 import com.api.sat.model.SeatData;
 import com.api.sat.model.UserDetails;
 import com.api.sat.service.ManagerService;
@@ -32,8 +33,8 @@ public class ManagerController {
 
     @GetMapping(value = "/myAvailableSeats")
     @CrossOrigin(origins = "*")
-    public ResponseEntity<List<SeatData>> getAvailableSeats(@RequestParam String id){
-        List<SeatData> details = managerService.getAvailableSeats(Integer.parseInt(id));
+    public ResponseEntity<List<FloorDto>> getAvailableSeats(@RequestParam String id){
+        List<FloorDto>  details = managerService.getAvailableSeats(id);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(details);

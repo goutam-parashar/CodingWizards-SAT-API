@@ -160,9 +160,9 @@ public class DatabaseRepository {
         return list;
     }
 
-    public UserDetails getMyDetails(int id) {
+    public UserDetails getMyDetails(String id) {
         Connection connection = getConnection();
-        String sql = "select * from userdetails where id = " + id;
+        String sql = "select * from userdetails where id = " + Integer.parseInt(id);
         if (connection != null){
             try {
                 ResultSet rs = connection.createStatement().executeQuery(sql);
