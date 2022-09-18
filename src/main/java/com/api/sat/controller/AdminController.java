@@ -1,8 +1,8 @@
 package com.api.sat.controller;
 
 import com.api.sat.model.FloorPlan;
-import com.api.sat.model.UserDetails;
-import com.api.sat.service.ManagerService;
+import com.api.sat.model.FloorPlanData;
+import com.api.sat.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,26 +15,17 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-public class ManagerController {
+public class AdminController {
 
     @Autowired
-    ManagerService managerService;
+    AdminService adminService;
 
-    @GetMapping(value = "/manager")
-    public ResponseEntity<List<UserDetails>> managerDetails(@RequestParam String id){
-        List<UserDetails> details = managerService.getManagerDetails(Integer.parseInt(id));
+    @GetMapping(value = "/floorplan")
+    public ResponseEntity<FloorPlanData> floorPlan(){
+        FloorPlanData details = adminService.getFloorPlan();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(details);
     }
-
-
-
-/*
-    @GetMapping("/createDummyData")
-    public String save(){
-        managerService.saveData();
-        return "Saved data";
-    }*/
 
 }

@@ -6,10 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 
 @Repository
@@ -77,6 +74,27 @@ public class DatabaseRepository {
             }
         } catch (Exception e){
             e.printStackTrace();
+        }
+    }
+
+    public void getFloorPlan(Map<String, Map<String, List<String>>> seats, Map<String, String> floorNames, Map<String, String> wingNames) {
+        String sql = "select floor_code, floor_name,  wing_code, wing_code, seat_num from seat group by floor_code, wing_code, seat_num order by floor_code, wing_code asc;";
+        Connection connection = getConnection();
+        if (connection != null) {
+            try {
+                Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery(sql);
+                while (resultSet.next()) {
+                    String floorId = resultSet.getString(1);//floor code
+                    String wingId = resultSet.getString(3); //wing code
+                    String seatNum = resultSet.getString(5); //seat num
+                    seats.get(floorId).get(wingId).add(seatNum);
+                    floorNames.put(floorId,resultSet.getString(2)); //floor name
+                    wingNames.put(wingId, resultSet.getString(4)); //wing name
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
