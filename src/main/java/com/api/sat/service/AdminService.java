@@ -52,11 +52,10 @@ public class AdminService {
         return new FloorPlanData(list);
     }
 
-    public void allocateSeats(AllocationData allocationData) {
+    public void allocateSeats(FloorPlanData fpd, String division) {
 //        {"floorId": "F1", "floorName":"Floor1","wingId":"W1","wingName":"Wing 1","seatStartNo": 1,"seatEndNo":40}
         String sql = "update seat set division = 'A' where seat_num = 1";
-        String division = allocationData.getDivision();
-        List<FloorPlan> data = allocationData.getData().getData();
+        List<FloorPlan> data = fpd.getData();
         List<String> queries = new ArrayList<>();
         StringBuilder sb =  new StringBuilder();
         for (FloorPlan d : data) {

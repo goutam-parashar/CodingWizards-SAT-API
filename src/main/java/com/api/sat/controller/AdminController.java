@@ -4,6 +4,7 @@ import com.api.sat.model.AllocationData;
 import com.api.sat.model.FloorPlan;
 import com.api.sat.model.FloorPlanData;
 import com.api.sat.service.AdminService;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -28,8 +29,10 @@ public class AdminController {
 
     @PostMapping(value = "allocate")
     @CrossOrigin(origins = "*")
-    public void allocateSeats(@RequestBody() AllocationData allocationData){
-        adminService.allocateSeats(allocationData);
+    public void allocateSeats(@RequestBody() String allocationData, @RequestParam("division") String division){
+        Gson gson= new Gson();
+        FloorPlanData data=gson.fromJson(allocationData,FloorPlanData.class);
+        adminService.allocateSeats(data, division);
     }
 
 }
