@@ -149,7 +149,7 @@ public class ManagerService {
         }
         Date n3StartDate = seatData.getN3StartDate();
         Date n3EndDate = seatData.getN3EndDate();
-        if (userId!=null && userId.equals(id) && n2StartDate!= null &&  n3StartDate.getTime() < date.getTime() && date.getTime() < n3EndDate.getTime()) {
+        if (userId!=null && userId.equals(id) && n3StartDate!= null &&  n3StartDate.getTime() < date.getTime() && date.getTime() < n3EndDate.getTime()) {
             seatData.setN3Status("allocated");
             seatData.setStatus("allocated");
         }
